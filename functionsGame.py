@@ -7,9 +7,18 @@ def lookEvent(nave):
     for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
+
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
-                    nave.rect.centerx += 1
+                    nave.movingRigth = True
+                elif event.key == pygame.K_LEFT:
+                    nave.movingLeft = True
+
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT:
+                    nave.movingRigth = False
+                elif event.key == pygame.K_LEFT:
+                    nave.movingLeft = False
 
 def updateScreen(aiSettings, screen, nave):
     # Estableciendo el color de fondo
