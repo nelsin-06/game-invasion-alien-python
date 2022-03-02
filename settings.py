@@ -9,3 +9,9 @@ class Config():
 
         # Config nave
         self.velocidadNave = 1.5
+
+        # Configuraciones de balas de nave
+        self.velocidadBala = 1
+        self.bala_width = 3
+        self.bala_heigth = 3
+        self.balaColor = 60, 60, 60
