@@ -29,10 +29,10 @@ class Nave ():
 
     def update(self):
         """Actualizando la posicion de la nave segun la bandera de movimiento"""
-        if self.movingRigth == True:
+        if self.movingRigth == True and self.rect.right < self.screenRect.right:
             self.centerDecimal += self.config.velocidadNave
 
-        if self.movingLeft == True:
+        if self.movingLeft == True and self.rect.left > self.screenRect.left:
             self.centerDecimal -= self.config.velocidadNave
 
         self.rect.centerx = self.centerDecimal
