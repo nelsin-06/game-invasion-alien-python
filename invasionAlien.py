@@ -4,6 +4,7 @@ from pygame.sprite import Group
 from settings import Config
 from nave import Nave
 import functionsGame as functGame
+from estadisticas import Estadisticas
 
 def startGame():
     # Iniciar el juego y crear un objeto pantalla
@@ -14,6 +15,9 @@ def startGame():
     screen = pygame.display.set_mode(
         (aiSettings.screen_width, aiSettings.screen_height))
     pygame.display.set_caption("INVASIÓN ALIEN")
+
+    # Se crea una instancia donde se almacenan las estadisticas del juego
+    estadisticas = Estadisticas(aiSettings)
 
     # Crear nueva nave
     nave = Nave(aiSettings, screen)
@@ -35,10 +39,10 @@ def startGame():
 
         # Actualizar posicion de la pantalla
         nave.update()
-        functGame.updateBalas(grupoDeBalas, grupoDeAliens)
+        functGame.updateBalas(aiSettings, screen, nave, grupoDeBalas, grupoDeAliens)
 
         # Actualizar posicion de los alines
-        functGame.updateAliens(aiSettings, grupoDeAliens)
+        functGame.updateAliens(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas)
 
         # Establecer config de fondo, nave, y pantalla
         functGame.updateScreen(aiSettings, screen, nave, grupoDeAliens, grupoDeBalas)

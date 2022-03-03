@@ -36,3 +36,8 @@ class Nave ():
             self.centerDecimal -= self.config.velocidadNave
 
         self.rect.centerx = self.centerDecimal
+
+    def centerNave(self):
+        """Centrar la nave en la pantalla"""
+        self.center = self.screenRect.centerx
+        self.rect.centerx = self.center

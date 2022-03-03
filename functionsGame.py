@@ -1,6 +1,5 @@
-from distutils.command.config import config
 import sys
-from zoneinfo import available_timezones
+from time import sleep
 
 import pygame
 
@@ -56,7 +55,7 @@ def updateScreen(aiSettings, screen, nave, grupoAliens, grupoBalas):
     pygame.display.flip()
 
 
-def updateBalas(grupoBalas, grupoDeAliens):
+def updateBalas(aiSettings, screen, nave, grupoBalas, grupoDeAliens):
     """Actualiza la posicion de las nuevas balas y elimina las antiguas"""
 
     # Actualizar posicion de las balas
@@ -66,9 +65,18 @@ def updateBalas(grupoBalas, grupoDeAliens):
     for bala in grupoBalas.copy():
         if bala.rect.bottom <= 0:
             grupoBalas.remove(bala)
-    
+    checkBalasAliensCollision(aiSettings, screen, nave,
+                              grupoBalas, grupoDeAliens)
+
+
+def checkBalasAliensCollision(aiSettings, screen, nave, grupoBalas, grupoDeAliens):
     # Comprobar si existen balas que hayan alcanzado a los aliens, si es asi se desaparecen ambos objetos
-    collisions = pygame.sprite.groupcollide(grupoBalas, grupoDeAliens, True, True)
+    collisions = pygame.sprite.groupcollide(
+        grupoBalas, grupoDeAliens, True, True)
+    if len(grupoDeAliens) == 0:
+        # Destruye las balas existentes y crear una nueva flota
+        grupoBalas.empty()
+        createdAliens(aiSettings, screen, nave, grupoDeAliens)
 
 
 def shotingBullet(aiSettings, screen, nave, grupoBalas):
@@ -79,19 +87,25 @@ def shotingBullet(aiSettings, screen, nave, grupoBalas):
         grupoBalas.add(nuevaBala)
 
 # Funcion auxiliar obtener el ancho de un alien
+
+
 def getAliensInX(aiSettings, alienWidth):
     """Determina el numero de espacio disponibles para crear aliens en cada fila"""
     availableSpaceBeteewAliens = aiSettings.screen_width - 2 * alienWidth
     numbersAliensInX = int(availableSpaceBeteewAliens / (2 * alienWidth))
     return numbersAliensInX
 
+
 def getNumberRows(aiSettings, naveHeidth, alienHeidth):
     """Determina el numero de filas de aliens que se ajustan en la pantala"""
-    availableSpaceInY = (aiSettings.screen_height - (3 * alienHeidth) - naveHeidth)
+    availableSpaceInY = (aiSettings.screen_height -
+                         (3 * alienHeidth) - naveHeidth)
     numberRows = int(availableSpaceInY / (2 * alienHeidth))
     return numberRows
 
 # Funcion auxiliar para el metodo createdAliens (Toda una flota)
+
+
 def createAlien(aiSettings, screen, grupoDeAliens, numberAlien, rowNumber):
     alien = Alien(aiSettings, screen)
     alienWidth = alien.rect.width
@@ -110,11 +124,13 @@ def createdAliens(aiSettings, screen, nave, grupoDeAliens):
     rowNumber = getNumberRows(aiSettings, nave.rect.height, alien.rect.height)
 
     # Creando la flota de aliens
-    
+
     for rowNumber in range(rowNumber):
         for numberAlien in range(numberAliensInX):
             # Crea un alien y lo coloca en la fila
-            createAlien(aiSettings, screen, grupoDeAliens, numberAlien, rowNumber)
+            createAlien(aiSettings, screen, grupoDeAliens,
+                        numberAlien, rowNumber)
+
 
 def checkFleetEdges(aiSettings, grupoDeAliens):
     """Responder de forma apropiada si el alien llega a algun borde"""
@@ -123,13 +139,38 @@ def checkFleetEdges(aiSettings, grupoDeAliens):
             changeFleetDirection(aiSettings, grupoDeAliens)
             break
 
+
 def changeFleetDirection(aiSettings, grupoDeAliens):
     """Cambia la direccion y deciende un espacio todas las naves"""
     for alien in grupoDeAliens:
         alien.rect.y += aiSettings.fleetDropSpeed
         aiSettings.fleetDirecion *= -1
 
-def updateAliens(aiSettings ,grupoDeAliens):
+
+def naveHit(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas):
+    """Reacciona la nave siendo golpeada por un ovni/alien"""
+    # Disminuye la cantidad de vidas de la nave
+    estadisticas.remainingShips -= 1
+
+    # Limpia grupos de balas y naves para efecto reinicio
+    grupoDeBalas.empty()
+    grupoDeAliens.empty()
+
+
+    # Crear una nueva flota de aliens y centrar la nave
+    createdAliens(aiSettings, screen, nave, grupoDeAliens)
+    nave.centerNave()
+
+    # pausa para efecto
+    sleep(0.5)
+
+
+
+def updateAliens(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas):
     """Comprueba si alguna de las naves toca los bordes, actualiza su direccion y baja un espacion para estar cerca al piso"""
     checkFleetEdges(aiSettings, grupoDeAliens)
     grupoDeAliens.update()
+
+    # Buscar colisiones entre los aliens y la nave
+    if pygame.sprite.spritecollideany(nave, grupoDeAliens):
+        naveHit(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas)
