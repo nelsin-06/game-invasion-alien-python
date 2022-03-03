@@ -19,7 +19,14 @@ class Bala(Sprite):
         self.color = config.balaColor
         self.velocidadBala = config.velocidadBala
 
-def update(self):
-    """Moviendo la bala hacia arriba en la pantalla"""
-    # Actualizar la posicion de la bala segun su trayectoriaa
-    self.y -= self.velocidadBala
+    def update(self):
+        """Moviendo la bala hacia arriba en la pantalla"""
+        # Actualizar la posicion de la bala segun su trayectoriaa
+        self.y -= self.velocidadBala
+
+        # Actualizando la posicion del rect (bala)
+        self.rect.y = self.y
+
+    def drawBala(self):
+        """Dibuja la bala en la pantalla"""
+        pygame.draw.rect(self.screen, self.color, self.rect)
