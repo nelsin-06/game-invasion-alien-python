@@ -5,6 +5,7 @@ from settings import Config
 from nave import Nave
 import functionsGame as functGame
 from estadisticas import Estadisticas
+from button import Button
 
 def startGame():
     # Iniciar el juego y crear un objeto pantalla
@@ -15,6 +16,9 @@ def startGame():
     screen = pygame.display.set_mode(
         (aiSettings.screen_width, aiSettings.screen_height))
     pygame.display.set_caption("INVASIÓN ALIEN")
+
+    # Se crea el button de la clase button
+    buttonPlay = Button(aiSettings, screen, "PLAY")
 
     # Se crea una instancia donde se almacenan las estadisticas del juego
     estadisticas = Estadisticas(aiSettings)
@@ -37,15 +41,16 @@ def startGame():
         # Detector de evento "QUIT" para salir del juego
         functGame.lookEvent(aiSettings, screen, nave, grupoDeBalas)
 
-        # Actualizar posicion de la pantalla
-        nave.update()
-        functGame.updateBalas(aiSettings, screen, nave, grupoDeBalas, grupoDeAliens)
+        if estadisticas.statusGame:
+            # Actualizar posicion de la pantalla
+            nave.update()
+            functGame.updateBalas(aiSettings, screen, nave, grupoDeBalas, grupoDeAliens)
 
-        # Actualizar posicion de los alines
-        functGame.updateAliens(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas)
+            # Actualizar posicion de los alines
+            functGame.updateAliens(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas)
 
         # Establecer config de fondo, nave, y pantalla
-        functGame.updateScreen(aiSettings, screen, nave, grupoDeAliens, grupoDeBalas)
+        functGame.updateScreen(aiSettings, screen, estadisticas, nave, grupoDeAliens, grupoDeBalas, buttonPlay)
 
 
 startGame()

@@ -6,6 +6,7 @@ import pygame
 from bala import Bala
 
 from alien import Alien
+from estadisticas import Estadisticas
 
 
 def eventKeyDown(event, aiSettings, screen, nave, grupoBalas):
@@ -40,7 +41,7 @@ def lookEvent(aiSettings, screen, nave, grupoBalas):
             eventKeyUp(event, nave)
 
 
-def updateScreen(aiSettings, screen, nave, grupoAliens, grupoBalas):
+def updateScreen(aiSettings, screen, estadisticas, nave, grupoAliens, grupoBalas, buttonPlay):
     # Estableciendo el color de fondo
     screen.fill(aiSettings.BG_color)
 
@@ -50,6 +51,10 @@ def updateScreen(aiSettings, screen, nave, grupoAliens, grupoBalas):
         balaDelGrupo.drawBala()
     nave.blitme()
     grupoAliens.draw(screen)
+
+    # Dibuja el juego mientras este inactivo
+    if not estadisticas.statusGame:
+        buttonPlay.drawButton()
 
     # Hacer visible la pantalla mas reciente
     pygame.display.flip()
@@ -149,22 +154,34 @@ def changeFleetDirection(aiSettings, grupoDeAliens):
 
 def naveHit(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas):
     """Reacciona la nave siendo golpeada por un ovni/alien"""
-    # Disminuye la cantidad de vidas de la nave
-    estadisticas.remainingShips -= 1
+    
+    if estadisticas.remainingShips > 0:
+        # Disminuye la cantidad de vidas de la nave
+        estadisticas.remainingShips -= 1
 
-    # Limpia grupos de balas y naves para efecto reinicio
-    grupoDeBalas.empty()
-    grupoDeAliens.empty()
-
-
-    # Crear una nueva flota de aliens y centrar la nave
-    createdAliens(aiSettings, screen, nave, grupoDeAliens)
-    nave.centerNave()
-
-    # pausa para efecto
-    sleep(0.5)
+        # Limpia grupos de balas y naves para efecto reinicio
+        grupoDeBalas.empty()
+        grupoDeAliens.empty()
 
 
+        # Crear una nueva flota de aliens y centrar la nave
+        createdAliens(aiSettings, screen, nave, grupoDeAliens)
+        nave.centerNave()
+
+        # pausa para efecto
+        sleep(0.5)
+    else:
+        estadisticas.statusGame = False
+
+def checkAlienBottom(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas):
+    """COomprobar si los alines llegaron al limite de abajo de la pantalla"""
+    screenRect = screen.get_rect()
+
+    for alien in grupoDeAliens.sprites():
+        if alien.rect.bottom == screenRect.bottom:
+            # Se maneja de la misma forma que si los aliens tocan la nave
+            naveHit(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas)
+            break
 
 def updateAliens(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas):
     """Comprueba si alguna de las naves toca los bordes, actualiza su direccion y baja un espacion para estar cerca al piso"""
@@ -174,3 +191,6 @@ def updateAliens(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeB
     # Buscar colisiones entre los aliens y la nave
     if pygame.sprite.spritecollideany(nave, grupoDeAliens):
         naveHit(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas)
+    
+    # Detectando si algun alien toco el fondo de la pantalla
+    checkAlienBottom(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas)

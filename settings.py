@@ -13,13 +13,13 @@ class Config():
 
         # Configuraciones de balas de nave
         self.velocidadBala = 1
-        self.bala_width = 3000
+        self.bala_width = 3
         self.bala_heigth = 15
         self.balaColor = 60, 60, 60
         self.balasAllowed = 3
 
         # Config aliens
-        self.velocidadAlien = 50
+        self.velocidadAlien = 1
         self.fleetDropSpeed = 10
 
         # fleet direcction si es 1 se mueve a la derecha; si es -1 se mueve hacia la izquierda
