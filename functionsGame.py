@@ -56,7 +56,7 @@ def updateScreen(aiSettings, screen, nave, grupoAliens, grupoBalas):
     pygame.display.flip()
 
 
-def updateBalas(grupoBalas):
+def updateBalas(grupoBalas, grupoDeAliens):
     """Actualiza la posicion de las nuevas balas y elimina las antiguas"""
 
     # Actualizar posicion de las balas
@@ -66,6 +66,9 @@ def updateBalas(grupoBalas):
     for bala in grupoBalas.copy():
         if bala.rect.bottom <= 0:
             grupoBalas.remove(bala)
+    
+    # Comprobar si existen balas que hayan alcanzado a los aliens, si es asi se desaparecen ambos objetos
+    collisions = pygame.sprite.groupcollide(grupoBalas, grupoDeAliens, True, True)
 
 
 def shotingBullet(aiSettings, screen, nave, grupoBalas):

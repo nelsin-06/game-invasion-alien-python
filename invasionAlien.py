@@ -35,7 +35,7 @@ def startGame():
 
         # Actualizar posicion de la pantalla
         nave.update()
-        functGame.updateBalas(grupoDeBalas)
+        functGame.updateBalas(grupoDeBalas, grupoDeAliens)
 
         # Actualizar posicion de los alines
         functGame.updateAliens(aiSettings, grupoDeAliens)
