@@ -82,23 +82,51 @@ def getAliensInX(aiSettings, alienWidth):
     numbersAliensInX = int(availableSpaceBeteewAliens / (2 * alienWidth))
     return numbersAliensInX
 
+def getNumberRows(aiSettings, naveHeidth, alienHeidth):
+    """Determina el numero de filas de aliens que se ajustan en la pantala"""
+    availableSpaceInY = (aiSettings.screen_height - (3 * alienHeidth) - naveHeidth)
+    numberRows = int(availableSpaceInY / (2 * alienHeidth))
+    return numberRows
+
 # Funcion auxiliar para el metodo createdAliens (Toda una flota)
-def createAlien(aiSettings, screen, grupoDeAliens, numberAlien):
+def createAlien(aiSettings, screen, grupoDeAliens, numberAlien, rowNumber):
     alien = Alien(aiSettings, screen)
     alienWidth = alien.rect.width
     alien.x = alienWidth + 2 * alienWidth * numberAlien
     alien.rect.x = alien.x
+    alien.rect.y = alien.rect.height + 2 * alien.rect.height * rowNumber
     grupoDeAliens.add(alien)
 
 
-def createdAliens(aiSettings, screen, grupoDeAliens):
+def createdAliens(aiSettings, screen, nave, grupoDeAliens):
     """Crear una flota completa de alienigenas"""
     # Crear un alien y encontrar la cantidad de aliens posibles
     # El espacio entre cada alien es igual al ancho de un alien
     alien = Alien(aiSettings, screen)
     numberAliensInX = getAliensInX(aiSettings, alien.rect.width)
+    rowNumber = getNumberRows(aiSettings, nave.rect.height, alien.rect.height)
 
-    # Creando la primera linea de aliens
-    for numberAlien in range(numberAliensInX):
-        # Crea un alien y lo coloca en la fila
-        createAlien(aiSettings, screen, grupoDeAliens, numberAlien)
+    # Creando la flota de aliens
+    
+    for rowNumber in range(rowNumber):
+        for numberAlien in range(numberAliensInX):
+            # Crea un alien y lo coloca en la fila
+            createAlien(aiSettings, screen, grupoDeAliens, numberAlien, rowNumber)
+
+def checkFleetEdges(aiSettings, grupoDeAliens):
+    """Responder de forma apropiada si el alien llega a algun borde"""
+    for alien in grupoDeAliens.sprites():
+        if alien.checkEdges():
+            changeFleetDirection(aiSettings, grupoDeAliens)
+            break
+
+def changeFleetDirection(aiSettings, grupoDeAliens):
+    """Cambia la direccion y deciende un espacio todas las naves"""
+    for alien in grupoDeAliens:
+        alien.rect.y += aiSettings.fleetDropSpeed
+        aiSettings.fleetDirecion *= -1
+
+def updateAliens(aiSettings ,grupoDeAliens):
+    """Comprueba si alguna de las naves toca los bordes, actualiza su direccion y baja un espacion para estar cerca al piso"""
+    checkFleetEdges(aiSettings, grupoDeAliens)
+    grupoDeAliens.update()

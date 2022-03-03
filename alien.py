@@ -24,3 +24,16 @@ class Alien(Sprite):
     def blitme(self):
         """Dibujar alien en su posicion actual"""
         self.screen.blit(self.image, self.rect)
+
+    def checkEdges(self):
+        """Devuelve verdadero si el alien llega al borde de la pantalla"""
+        screenRect = self.screen.get_rect() # Se establece valores rect de la pantalla
+        if self.rect.right >= screenRect.right: # Se declara. Si el valor de la nave ovni en su posicion derecha llega a ser igual o mayo a la posicion derecha de la pantalla return true
+            return True
+        elif self.rect.left <= 0: # Se declara. Si el valor de las naves ovni llega a tocar al posicion 0 retorna true
+            return True
+
+    def update(self):
+        """Mueve el alien a la derecha"""
+        self.x += (self.aiSettings.velocidadAlien * self.aiSettings.fleetDirecion)
+        self.rect.x = self.x

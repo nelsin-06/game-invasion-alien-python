@@ -16,3 +16,10 @@ class Config():
         self.bala_heigth = 3
         self.balaColor = 60, 60, 60
         self.balasAllowed = 3
+
+        # Config aliens
+        self.velocidadAlien = 1
+        self.fleetDropSpeed = 10
+
+        # fleet direcction si es 1 se mueve a la derecha; si es -1 se mueve hacia la izquierda
+        self.fleetDirecion = 1

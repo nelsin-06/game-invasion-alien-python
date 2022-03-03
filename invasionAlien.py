@@ -25,7 +25,7 @@ def startGame():
     grupoDeAliens = Group()
 
     # Crear flota de aliens
-    functGame.createdAliens(aiSettings, screen, grupoDeAliens)
+    functGame.createdAliens(aiSettings, screen, nave,grupoDeAliens)
 
     # Iniciar el bloque principal de deteccion de eventos
     while True:
@@ -36,6 +36,9 @@ def startGame():
         # Actualizar posicion de la pantalla
         nave.update()
         functGame.updateBalas(grupoDeBalas)
+
+        # Actualizar posicion de los alines
+        functGame.updateAliens(aiSettings, grupoDeAliens)
 
         # Establecer config de fondo, nave, y pantalla
         functGame.updateScreen(aiSettings, screen, nave, grupoDeAliens, grupoDeBalas)
