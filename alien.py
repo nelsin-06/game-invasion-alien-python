@@ -3,16 +3,16 @@ from pygame.sprite import Sprite
 
 class Alien(Sprite):
     """Su funcion es representar un objeto Alien en la flota"""
-    def __init__(self, iaSettings, screen):
+    def __init__(self, aiSettings, screen):
         """Inicializa el alien y establece su posicion"""
         super(Alien, self).__init__()
 
         self.screen = screen
-        self.iaSettings = iaSettings
+        self.aiSettings = aiSettings
 
         # Cargar la imagen y establece su posicion inicial y rect
-        self.imagen = pygame.image.load("img/ovni.bmp") # Cargamos y referenciamos la imagen al atributo imagen.
-        self.rect = self.imagen.get_rect() # Obtenemos y asignamos la forma rectacgular a la imagen y lo asignamos a la variable rect
+        self.image = pygame.image.load("img/ovni.bmp") # Cargamos y referenciamos la imagen al atributo imagen.
+        self.rect = self.image.get_rect() # Obtenemos y asignamos la forma rectacgular a la imagen y lo asignamos a la variable rect
 
         # Iniciamos el nuevo alien cerca a la parte superior izquierda
         self.rect.x = self.rect.width
@@ -23,4 +23,4 @@ class Alien(Sprite):
 
     def blitme(self):
         """Dibujar alien en su posicion actual"""
-        self.screen.blit(self.imagen, self.rect)
+        self.screen.blit(self.image, self.rect)
