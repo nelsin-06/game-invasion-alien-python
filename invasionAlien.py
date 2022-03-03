@@ -31,7 +31,12 @@ def startGame():
         nave.update()
         balas.update()
 
-       # Establecer config de fondo, nave, y pantalla
+        # Deshacer las balas que han desaparecido
+        for bala in balas.copy():
+            if bala.rect.bottom <= 0:
+                balas.remove(bala)
+                
+        # Establecer config de fondo, nave, y pantalla
         functGame.updateScreen(aiSettings, screen, nave, balas)
 
 

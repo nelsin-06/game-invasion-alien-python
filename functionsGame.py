@@ -1,3 +1,4 @@
+from distutils.command.config import config
 import sys
 
 import pygame
@@ -11,9 +12,10 @@ def eventKeyDown(event, aiSettings, screen, nave, grupoBalas):
     elif event.key == pygame.K_LEFT:
         nave.movingLeft = True
     elif event.key == pygame.K_SPACE:
-        # Crea una nueva bala y la agrega al grupo del balas
-        nuevaBala = Bala(aiSettings, screen, nave)
-        grupoBalas.add(nuevaBala)
+        # Crea una nueva bala y la agrega al grupo del balas ///////////////////
+        if len(grupoBalas) < aiSettings.balasAllowed: # Si la longitud del grupo de balas es menor a las balas establecidas se puede dispara
+            nuevaBala = Bala(aiSettings, screen, nave)
+            grupoBalas.add(nuevaBala)
 
 
 def eventKeyUp(event, nave):

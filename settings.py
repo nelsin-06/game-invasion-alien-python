@@ -15,3 +15,4 @@ class Config():
         self.bala_width = 3
         self.bala_heigth = 3
         self.balaColor = 60, 60, 60
+        self.balasAllowed = 3
