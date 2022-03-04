@@ -1,4 +1,3 @@
-from turtle import clear
 import pygame
 from pygame.sprite import Group
 from settings import Config

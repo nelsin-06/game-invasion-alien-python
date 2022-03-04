@@ -6,10 +6,6 @@ import pygame
 from bala import Bala
 
 from alien import Alien
-from button import Button
-from estadisticas import Estadisticas
-from marcador import Marcador
-
 
 def eventKeyDown(event, aiSettings, screen, nave, grupoBalas):
     if event.key == pygame.K_RIGHT:
