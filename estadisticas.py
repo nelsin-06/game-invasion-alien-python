@@ -12,5 +12,6 @@ class Estadisticas():
     def resetStats(self):
         """Inicializa las estadisticas del juego"""
         self.remainingShips = self.aiSettings.numberNaves # Se establece las vidas del juego de la nave.
+        self.score = 0
 
 

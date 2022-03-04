@@ -49,6 +49,9 @@ def checkClicOnPlay(aiSettings, screen, estadisticas, buttonPlay, nave, grupoDeA
     """Comience el juego cuando se de clic sobre la pocision del rect del button"""
     buttonClicket = buttonPlay.rect.collidepoint(mouseX, mouseY)
     if buttonClicket and not estadisticas.statusGame:
+        
+        aiSettings.setDefaultConfigDinamic()
+        
         # Ocultar el pulsor del mouse
         pygame.mouse.set_visible(False)
         # Restableciendo las estadisticas del frio
@@ -104,6 +107,7 @@ def checkBalasAliensCollision(aiSettings, screen, nave, grupoBalas, grupoDeAlien
     if len(grupoDeAliens) == 0:
         # Destruye las balas existentes y crear una nueva flota
         grupoBalas.empty()
+        aiSettings.increaseSpeedGame()
         createdAliens(aiSettings, screen, nave, grupoDeAliens)
 
 
