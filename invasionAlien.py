@@ -39,7 +39,7 @@ def startGame():
     while True:
 
         # Detector de evento "QUIT" para salir del juego
-        functGame.lookEvent(aiSettings, screen, nave, grupoDeBalas)
+        functGame.lookEvent(aiSettings, screen, estadisticas, buttonPlay,nave, grupoDeBalas, grupoDeAliens)
 
         if estadisticas.statusGame:
             # Actualizar posicion de la pantalla

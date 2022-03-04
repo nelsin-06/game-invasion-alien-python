@@ -6,6 +6,7 @@ import pygame
 from bala import Bala
 
 from alien import Alien
+from button import Button
 from estadisticas import Estadisticas
 
 
@@ -27,7 +28,7 @@ def eventKeyUp(event, nave):
         nave.movingLeft = False
 
 
-def lookEvent(aiSettings, screen, nave, grupoBalas):
+def lookEvent(aiSettings, screen, estadisticas, buttonPlay,nave, grupoBalas, grupoDeAliens):
     """Detecta pulsaciones de teclas y el raton"""
     for event in pygame.event.get():
 
@@ -39,6 +40,28 @@ def lookEvent(aiSettings, screen, nave, grupoBalas):
 
         elif event.type == pygame.KEYUP:
             eventKeyUp(event, nave)
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouseX, mouseY = pygame.mouse.get_pos()
+            checkClicOnPlay(aiSettings, screen, estadisticas, buttonPlay, nave, grupoDeAliens, grupoBalas, mouseX, mouseY)
+
+def checkClicOnPlay(aiSettings, screen, estadisticas, buttonPlay, nave, grupoDeAliens, grupoDeBalas, mouseX, mouseY):
+    """Comience el juego cuando se de clic sobre la pocision del rect del button"""
+    buttonClicket = buttonPlay.rect.collidepoint(mouseX, mouseY)
+    if buttonClicket and not estadisticas.statusGame:
+        # Ocultar el pulsor del mouse
+        pygame.mouse.set_visible(False)
+        # Restableciendo las estadisticas del frio
+        estadisticas.resetStats()
+        estadisticas.statusGame = True
+
+        # Limpiando los datos de grupo de aliens y grupo de balas
+        grupoDeAliens.empty()
+        grupoDeBalas.empty()
+
+        # Creando nueva flota de aliens y centrando nave
+        createdAliens(aiSettings, screen, nave, grupoDeAliens)
+        nave.centerNave()
 
 
 def updateScreen(aiSettings, screen, estadisticas, nave, grupoAliens, grupoBalas, buttonPlay):
@@ -172,6 +195,7 @@ def naveHit(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas)
         sleep(0.5)
     else:
         estadisticas.statusGame = False
+        pygame.mouse.set_visible(True)
 
 def checkAlienBottom(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas):
     """COomprobar si los alines llegaron al limite de abajo de la pantalla"""
