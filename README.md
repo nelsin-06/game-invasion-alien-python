@@ -8,7 +8,7 @@ Para iniciar el juego descargamos el codigo y ejecutamos el archivo invasionAlie
 
 Centrado en el desarrollo orientado a objetos. Sé ira actualizando y refactorizando a lo largo de los días. :)
 
-### Contruido por 
+### Contruido por 👨‍💻👨‍🍳
 
 **Nelson Stiven Gallego Garcia**
 **nelsoncg0611@gmail.com**
