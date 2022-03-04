@@ -1,2 +1,4 @@
 ALIENS == <a href="https://www.flaticon.es/iconos-gratis/ovni" title="ovni iconos">Ovni iconos creados por Freepik - Flaticon</a>
 NAVE JUGADOR == <a href="https://www.flaticon.es/iconos-gratis/lanzamiento-de-nave-espacial" title="lanzamiento-de-nave-espacial iconos">Lanzamiento-de-nave-espacial iconos creados por Freepik - Flaticon</a>
+<a href="https://www.flaticon.es/iconos-gratis/pixel" title="pixel iconos">Pixel iconos creados por Futuer - Flaticon</a>
+

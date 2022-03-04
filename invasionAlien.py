@@ -43,7 +43,7 @@ def startGame():
     while True:
 
         # Detector de evento "QUIT" para salir del juego
-        functGame.lookEvent(aiSettings, screen, estadisticas, buttonPlay,nave, grupoDeBalas, grupoDeAliens)
+        functGame.lookEvent(aiSettings, screen, estadisticas, buttonPlay,nave, score, grupoDeBalas, grupoDeAliens)
 
         if estadisticas.statusGame:
             # Actualizar posicion de la pantalla
@@ -51,7 +51,7 @@ def startGame():
             functGame.updateBalas(aiSettings, screen, estadisticas, score, nave, grupoDeBalas, grupoDeAliens)
 
             # Actualizar posicion de los alines
-            functGame.updateAliens(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas)
+            functGame.updateAliens(aiSettings, estadisticas, screen, nave, score, grupoDeAliens, grupoDeBalas)
 
         # Establecer config de fondo, nave, y pantalla
         functGame.updateScreen(aiSettings, screen, estadisticas, nave, grupoDeAliens, grupoDeBalas, buttonPlay, score)

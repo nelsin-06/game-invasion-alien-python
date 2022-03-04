@@ -25,6 +25,9 @@ class Config():
         # Escala aceleracion de los aliens
         self.escalaAceleracion = 1.1
 
+        # escala del valor de los aliens dependiendo de que tan lejos hayan llegado al juego
+        self.escalaPuntaje = 1.5
+
         # Se restablecen/inicializan las configuraciones dinamicas del juego
         self.setDefaultConfigDinamic()
 
@@ -35,10 +38,12 @@ class Config():
         # fleet direcction si es 1 se mueve a la derecha; si es -1 se mueve hacia la izquierda
         self.fleetDirecion = 1
         # Score
-        self.valueAlien = 50
+        self.valueAlien = 5
 
     def increaseSpeedGame(self):
         """Aumenta las velocidades del juego"""
         self.velocidadNave *= self.escalaAceleracion
         self.velocidadBala *= self.escalaAceleracion
         self.velocidadAlien *= self.escalaAceleracion
+        
+        self.valueAlien = int(self.valueAlien * self.escalaPuntaje)

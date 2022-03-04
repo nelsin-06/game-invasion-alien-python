@@ -1,16 +1,15 @@
-from distutils.command.config import config
-from pickle import TRUE
 import pygame
+from pygame.sprite import Sprite
 
-class Nave ():
+class Nave (Sprite):
     def __init__(self, config, screen):
-        
+        super(Nave, self).__init__()
         self.screen = screen
         self.config = config
 
         # Cargar imagen y obtener su rect
-        self.imagen = pygame.image.load("img/nave-espacial.bmp") # Cargamos y referenciamos la imagen a la variable imagen.
-        self.rect = self.imagen.get_rect() # Obtenemos y asignamos la forma rectacgular a la imagen y lo asignamos a la variable rect
+        self.image = pygame.image.load("img/nave-espacial.bmp") # Cargamos y referenciamos la imagen a la variable imagen.
+        self.rect = self.image.get_rect() # Obtenemos y asignamos la forma rectacgular a la imagen y lo asignamos a la variable rect
         self.screenRect = screen.get_rect() # Obtenemos y asignamos la forma rectangular 
 
         # Posicionar la nave en la parte central de la pantalla
@@ -25,7 +24,7 @@ class Nave ():
         self.movingLeft = False
 
     def blitme(self):
-        self.screen.blit(self.imagen, self.rect)
+        self.screen.blit(self.image, self.rect)
 
     def update(self):
         """Actualizando la posicion de la nave segun la bandera de movimiento"""

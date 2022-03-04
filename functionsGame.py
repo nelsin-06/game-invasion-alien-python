@@ -8,6 +8,7 @@ from bala import Bala
 from alien import Alien
 from button import Button
 from estadisticas import Estadisticas
+from marcador import Marcador
 
 
 def eventKeyDown(event, aiSettings, screen, nave, grupoBalas):
@@ -28,7 +29,7 @@ def eventKeyUp(event, nave):
         nave.movingLeft = False
 
 
-def lookEvent(aiSettings, screen, estadisticas, buttonPlay,nave, grupoBalas, grupoDeAliens):
+def lookEvent(aiSettings, screen, estadisticas, buttonPlay,nave, score, grupoBalas, grupoDeAliens):
     """Detecta pulsaciones de teclas y el raton"""
     for event in pygame.event.get():
 
@@ -43,9 +44,9 @@ def lookEvent(aiSettings, screen, estadisticas, buttonPlay,nave, grupoBalas, gru
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouseX, mouseY = pygame.mouse.get_pos()
-            checkClicOnPlay(aiSettings, screen, estadisticas, buttonPlay, nave, grupoDeAliens, grupoBalas, mouseX, mouseY)
+            checkClicOnPlay(aiSettings, screen, estadisticas, buttonPlay, nave, score, grupoDeAliens, grupoBalas, mouseX, mouseY)
 
-def checkClicOnPlay(aiSettings, screen, estadisticas, buttonPlay, nave, grupoDeAliens, grupoDeBalas, mouseX, mouseY):
+def checkClicOnPlay(aiSettings, screen, estadisticas, buttonPlay, nave, score, grupoDeAliens, grupoDeBalas, mouseX, mouseY):
     """Comience el juego cuando se de clic sobre la pocision del rect del button"""
     buttonClicket = buttonPlay.rect.collidepoint(mouseX, mouseY)
     if buttonClicket and not estadisticas.statusGame:
@@ -57,6 +58,11 @@ def checkClicOnPlay(aiSettings, screen, estadisticas, buttonPlay, nave, grupoDeA
         # Restableciendo las estadisticas del frio
         estadisticas.resetStats()
         estadisticas.statusGame = True
+
+        # Restablecer las imagenes del marcador
+        score.prepMsg()
+        score.prepLevel()
+        score.prepNave()
 
         # Limpiando los datos de grupo de aliens y grupo de balas
         grupoDeAliens.empty()
@@ -108,15 +114,28 @@ def checkBalasAliensCollision(aiSettings, screen, estadisticas, score, nave, gru
         grupoBalas, grupoDeAliens, True, True)
     
     if collisions:
-        estadisticas.score += aiSettings.valueAlien
-        score.prepMsg()
+        for aliensDelGrupo in collisions.values():
+            estadisticas.score += aiSettings.valueAlien * len(aliensDelGrupo)
+            score.prepMsg()
+        
+        checkMaxScore(estadisticas, score)
 
     if len(grupoDeAliens) == 0:
         # Destruye las balas existentes y crear una nueva flota
         grupoBalas.empty()
         aiSettings.increaseSpeedGame()
+
+        # Incremento de nivel
+        estadisticas.level += 1
+        score.prepLevel()
+
         createdAliens(aiSettings, screen, nave, grupoDeAliens)
 
+def checkMaxScore(estadisticas, score):
+    """Verificar si existe un puntaje mas alto que el actual"""
+    if estadisticas.score > estadisticas.scoreMax:
+        estadisticas.scoreMax = estadisticas.score
+        score.prepScoreMax()
 
 def shotingBullet(aiSettings, screen, nave, grupoBalas):
     # Crea una nueva bala y la agrega al grupo del balas ///////////////////
@@ -186,12 +205,14 @@ def changeFleetDirection(aiSettings, grupoDeAliens):
     aiSettings.fleetDirecion *= -1
 
 
-def naveHit(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas):
+def naveHit(aiSettings, estadisticas, screen, nave, score, grupoDeAliens, grupoDeBalas):
     """Reacciona la nave siendo golpeada por un ovni/alien"""
     
     if estadisticas.remainingShips > 0:
         # Disminuye la cantidad de vidas de la nave
         estadisticas.remainingShips -= 1
+        
+        score.prepNave()
 
         # Limpia grupos de balas y naves para efecto reinicio
         grupoDeBalas.empty()
@@ -208,24 +229,24 @@ def naveHit(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas)
         estadisticas.statusGame = False
         pygame.mouse.set_visible(True)
 
-def checkAlienBottom(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas):
+def checkAlienBottom(aiSettings, estadisticas, screen, nave, score, grupoDeAliens, grupoDeBalas):
     """COomprobar si los alines llegaron al limite de abajo de la pantalla"""
     screenRect = screen.get_rect()
 
     for alien in grupoDeAliens.sprites():
         if alien.rect.bottom == screenRect.bottom:
             # Se maneja de la misma forma que si los aliens tocan la nave
-            naveHit(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas)
+            naveHit(aiSettings, estadisticas, screen, nave, score, grupoDeAliens, grupoDeBalas)
             break
 
-def updateAliens(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas):
+def updateAliens(aiSettings, estadisticas, screen, nave, score, grupoDeAliens, grupoDeBalas):
     """Comprueba si alguna de las naves toca los bordes, actualiza su direccion y baja un espacion para estar cerca al piso"""
     checkFleetEdges(aiSettings, grupoDeAliens)
     grupoDeAliens.update()
 
     # Buscar colisiones entre los aliens y la nave
     if pygame.sprite.spritecollideany(nave, grupoDeAliens):
-        naveHit(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas)
+        naveHit(aiSettings, estadisticas, screen, nave, score,grupoDeAliens, grupoDeBalas)
     
     # Detectando si algun alien toco el fondo de la pantalla
-    checkAlienBottom(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas)
+    checkAlienBottom(aiSettings, estadisticas, screen, nave, score, grupoDeAliens, grupoDeBalas)
