@@ -9,6 +9,7 @@ Cuenta con un contador de vidas, con un contador de puntaje, puntaje máximo y 
 
 ## Controles y forma de iniciar
 Para iniciar el juego descargamos el codigo y ejecutamos el archivo invasionAlien.py
+
 Controles: Flechas izquierda y derecha para moverse a la izquierda y derecha de la pantalla respectivamente y barra espaciadora para disparar.
 
 
