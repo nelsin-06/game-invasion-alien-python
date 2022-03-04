@@ -172,7 +172,7 @@ def changeFleetDirection(aiSettings, grupoDeAliens):
     """Cambia la direccion y deciende un espacio todas las naves"""
     for alien in grupoDeAliens:
         alien.rect.y += aiSettings.fleetDropSpeed
-        aiSettings.fleetDirecion *= -1
+    aiSettings.fleetDirecion *= -1
 
 
 def naveHit(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas):
