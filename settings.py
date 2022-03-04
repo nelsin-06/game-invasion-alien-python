@@ -34,6 +34,8 @@ class Config():
         self.velocidadAlien = 1
         # fleet direcction si es 1 se mueve a la derecha; si es -1 se mueve hacia la izquierda
         self.fleetDirecion = 1
+        # Score
+        self.valueAlien = 50
 
     def increaseSpeedGame(self):
         """Aumenta las velocidades del juego"""

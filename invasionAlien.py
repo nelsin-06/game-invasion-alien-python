@@ -6,6 +6,7 @@ from nave import Nave
 import functionsGame as functGame
 from estadisticas import Estadisticas
 from button import Button
+from marcador import Marcador
 
 def startGame():
     # Iniciar el juego y crear un objeto pantalla
@@ -22,6 +23,9 @@ def startGame():
 
     # Se crea una instancia donde se almacenan las estadisticas del juego
     estadisticas = Estadisticas(aiSettings)
+
+    # Se crea una instancia del marcador
+    score = Marcador(aiSettings, screen, estadisticas)
 
     # Crear nueva nave
     nave = Nave(aiSettings, screen)
@@ -44,13 +48,13 @@ def startGame():
         if estadisticas.statusGame:
             # Actualizar posicion de la pantalla
             nave.update()
-            functGame.updateBalas(aiSettings, screen, nave, grupoDeBalas, grupoDeAliens)
+            functGame.updateBalas(aiSettings, screen, estadisticas, score, nave, grupoDeBalas, grupoDeAliens)
 
             # Actualizar posicion de los alines
             functGame.updateAliens(aiSettings, estadisticas, screen, nave, grupoDeAliens, grupoDeBalas)
 
         # Establecer config de fondo, nave, y pantalla
-        functGame.updateScreen(aiSettings, screen, estadisticas, nave, grupoDeAliens, grupoDeBalas, buttonPlay)
+        functGame.updateScreen(aiSettings, screen, estadisticas, nave, grupoDeAliens, grupoDeBalas, buttonPlay, score)
 
 
 startGame()

@@ -67,7 +67,7 @@ def checkClicOnPlay(aiSettings, screen, estadisticas, buttonPlay, nave, grupoDeA
         nave.centerNave()
 
 
-def updateScreen(aiSettings, screen, estadisticas, nave, grupoAliens, grupoBalas, buttonPlay):
+def updateScreen(aiSettings, screen, estadisticas, nave, grupoAliens, grupoBalas, buttonPlay, score):
     # Estableciendo el color de fondo
     screen.fill(aiSettings.BG_color)
 
@@ -78,6 +78,9 @@ def updateScreen(aiSettings, screen, estadisticas, nave, grupoAliens, grupoBalas
     nave.blitme()
     grupoAliens.draw(screen)
 
+    # Dibuja el score en la pantalla
+    score.drawScore()
+
     # Dibuja el juego mientras este inactivo
     if not estadisticas.statusGame:
         buttonPlay.drawButton()
@@ -86,7 +89,7 @@ def updateScreen(aiSettings, screen, estadisticas, nave, grupoAliens, grupoBalas
     pygame.display.flip()
 
 
-def updateBalas(aiSettings, screen, nave, grupoBalas, grupoDeAliens):
+def updateBalas(aiSettings, screen, estadisticas, score, nave, grupoBalas, grupoDeAliens):
     """Actualiza la posicion de las nuevas balas y elimina las antiguas"""
 
     # Actualizar posicion de las balas
@@ -96,14 +99,18 @@ def updateBalas(aiSettings, screen, nave, grupoBalas, grupoDeAliens):
     for bala in grupoBalas.copy():
         if bala.rect.bottom <= 0:
             grupoBalas.remove(bala)
-    checkBalasAliensCollision(aiSettings, screen, nave,
-                              grupoBalas, grupoDeAliens)
+    checkBalasAliensCollision(aiSettings, screen, estadisticas, score, nave, grupoBalas, grupoDeAliens)
 
 
-def checkBalasAliensCollision(aiSettings, screen, nave, grupoBalas, grupoDeAliens):
+def checkBalasAliensCollision(aiSettings, screen, estadisticas, score, nave, grupoBalas, grupoDeAliens):
     # Comprobar si existen balas que hayan alcanzado a los aliens, si es asi se desaparecen ambos objetos
     collisions = pygame.sprite.groupcollide(
         grupoBalas, grupoDeAliens, True, True)
+    
+    if collisions:
+        estadisticas.score += aiSettings.valueAlien
+        score.prepMsg()
+
     if len(grupoDeAliens) == 0:
         # Destruye las balas existentes y crear una nueva flota
         grupoBalas.empty()
